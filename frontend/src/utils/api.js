@@ -1,7 +1,3 @@
-/**
- * Axios API instance with JWT auth header auto-injection
- */
-
 import axios from 'axios';
 
 const api = axios.create({
@@ -9,7 +5,6 @@ const api = axios.create({
     headers: { 'Content-Type': 'application/json' },
 });
 
-// Attach JWT token to every request if available
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
@@ -21,7 +16,6 @@ api.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// Redirect to login on 401 Unauthorized
 api.interceptors.response.use(
     (response) => response,
     (error) => {

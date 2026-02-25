@@ -1,19 +1,9 @@
-/**
- * Auth Routes
- * POST /api/auth/login - Admin login with JWT
- */
-
 const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-/**
- * @route   POST /api/auth/login
- * @desc    Authenticate admin and return JWT token
- * @access  Public
- */
 router.post(
     '/login',
     [
@@ -26,7 +16,6 @@ router.post(
             .withMessage('Password is required'),
     ],
     async (req, res) => {
-        // Validate request body
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({
@@ -39,7 +28,6 @@ router.post(
         const { email, password } = req.body;
 
         try {
-            // Find user by email (explicitly select password since it has select: false)
             const user = await User.findOne({ email }).select('+password');
 
             if (!user) {
@@ -49,7 +37,6 @@ router.post(
                 });
             }
 
-            // Compare entered password with stored hashed password
             const isMatch = await user.matchPassword(password);
             if (!isMatch) {
                 return res.status(401).json({
@@ -58,7 +45,6 @@ router.post(
                 });
             }
 
-            // Generate JWT token
             const token = jwt.sign(
                 { id: user._id, role: user.role },
                 process.env.JWT_SECRET,

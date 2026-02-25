@@ -1,8 +1,3 @@
-/**
- * Login Page
- * Admin authentication form with email/ password validation
- */
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -19,24 +14,19 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false);
     const [serverError, setServerError] = useState('');
 
-    // Validate form fields client-side
     const validate = () => {
         const errs = {};
         const emailRegex = /^\S+@\S+\.\S+$/;
-
         if (!form.email) errs.email = 'Email is required';
         else if (!emailRegex.test(form.email)) errs.email = 'Enter a valid email address';
-
         if (!form.password) errs.password = 'Password is required';
         else if (form.password.length < 6) errs.password = 'Password must be at least 6 characters';
-
         return errs;
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm(prev => ({ ...prev, [name]: value }));
-        // Clear field-level error on change
         if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
         if (serverError) setServerError('');
     };
@@ -44,10 +34,7 @@ export default function LoginPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const errs = validate();
-        if (Object.keys(errs).length > 0) {
-            setErrors(errs);
-            return;
-        }
+        if (Object.keys(errs).length > 0) { setErrors(errs); return; }
 
         setLoading(true);
         setServerError('');
@@ -67,12 +54,10 @@ export default function LoginPage() {
 
     return (
         <div className={styles.container}>
-            {/* Decorative background blobs */}
             <div className={styles.blob1} />
             <div className={styles.blob2} />
 
             <div className={styles.card}>
-                {/* Logo / Brand */}
                 <div className={styles.brand}>
                     <div className={styles.logo}>
                         <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -89,20 +74,16 @@ export default function LoginPage() {
                     <p>Sign in to manage your workspace</p>
                 </div>
 
-                {/* Server-side error message */}
                 {serverError && <div className="error-msg">{serverError}</div>}
 
                 <form onSubmit={handleSubmit} noValidate>
                     <div className="form-group">
                         <label htmlFor="email">Email Address</label>
                         <input
-                            id="email"
-                            type="email"
-                            name="email"
+                            id="email" type="email" name="email"
                             className={`form-control ${errors.email ? 'error' : ''}`}
                             placeholder="admin@example.com"
-                            value={form.email}
-                            onChange={handleChange}
+                            value={form.email} onChange={handleChange}
                             autoComplete="email"
                         />
                         {errors.email && <span className={styles.fieldError}>{errors.email}</span>}
@@ -111,13 +92,10 @@ export default function LoginPage() {
                     <div className="form-group">
                         <label htmlFor="password">Password</label>
                         <input
-                            id="password"
-                            type="password"
-                            name="password"
+                            id="password" type="password" name="password"
                             className={`form-control ${errors.password ? 'error' : ''}`}
                             placeholder="Enter your password"
-                            value={form.password}
-                            onChange={handleChange}
+                            value={form.password} onChange={handleChange}
                             autoComplete="current-password"
                         />
                         {errors.password && <span className={styles.fieldError}>{errors.password}</span>}

@@ -1,15 +1,9 @@
-/**
- * JWT Authentication Middleware
- * Protects routes by verifying Bearer tokens
- */
-
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 const protect = async (req, res, next) => {
     let token;
 
-    // Extract token from Authorization header
     if (
         req.headers.authorization &&
         req.headers.authorization.startsWith('Bearer ')
@@ -25,10 +19,7 @@ const protect = async (req, res, next) => {
     }
 
     try {
-        // Verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-        // Attach user to request object (excluding password)
         req.user = await User.findById(decoded.id).select('-password');
 
         if (!req.user) {

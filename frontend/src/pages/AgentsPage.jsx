@@ -1,17 +1,9 @@
-/**
- * Agents Page
- * - Lists all agents in a table
- * - Add agent via modal form
- * - Edit / Delete agents
- */
-
 import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import { FiPlus, FiEdit2, FiTrash2, FiUsers } from 'react-icons/fi';
 import api from '../utils/api';
 import styles from './AgentsPage.module.css';
 
-// Country code options (common ones)
 const COUNTRY_CODES = [
     { code: '+1', label: 'US/CA (+1)' },
     { code: '+44', label: 'UK (+44)' },
@@ -31,12 +23,11 @@ export default function AgentsPage() {
     const [agents, setAgents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
-    const [editAgent, setEditAgent] = useState(null); // null = add mode
+    const [editAgent, setEditAgent] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [errors, setErrors] = useState({});
     const [saving, setSaving] = useState(false);
 
-    // ---- Fetch agents ----
     const fetchAgents = useCallback(async () => {
         try {
             setLoading(true);
@@ -51,7 +42,6 @@ export default function AgentsPage() {
 
     useEffect(() => { fetchAgents(); }, [fetchAgents]);
 
-    // ---- Open modal ----
     const openAdd = () => {
         setEditAgent(null);
         setForm(EMPTY_FORM);
@@ -61,7 +51,6 @@ export default function AgentsPage() {
 
     const openEdit = (agent) => {
         setEditAgent(agent);
-        // Split mobile into country code + digits for editing
         const known = COUNTRY_CODES.find(c => agent.mobile.startsWith(c.code));
         const cc = known ? known.code : '+91';
         const digits = agent.mobile.replace(cc, '').trim();
@@ -70,7 +59,6 @@ export default function AgentsPage() {
         setShowModal(true);
     };
 
-    // ---- Form validation ----
     const validate = () => {
         const errs = {};
         const emailRegex = /^\S+@\S+\.\S+$/;
@@ -86,7 +74,6 @@ export default function AgentsPage() {
         return errs;
     };
 
-    // ---- Submit (add or edit) ----
     const handleSubmit = async (e) => {
         e.preventDefault();
         const errs = validate();
@@ -111,14 +98,12 @@ export default function AgentsPage() {
             setShowModal(false);
             fetchAgents();
         } catch (err) {
-            const msg = err.response?.data?.message || 'Failed to save agent';
-            toast.error(msg);
+            toast.error(err.response?.data?.message || 'Failed to save agent');
         } finally {
             setSaving(false);
         }
     };
 
-    // ---- Delete ----
     const handleDelete = async (id, name) => {
         if (!window.confirm(`Delete agent "${name}"? This cannot be undone.`)) return;
         try {
@@ -138,7 +123,6 @@ export default function AgentsPage() {
 
     return (
         <div>
-            {/* Page Header */}
             <div className={styles.header}>
                 <div>
                     <h2 className={styles.title}>
@@ -154,7 +138,6 @@ export default function AgentsPage() {
                 </button>
             </div>
 
-            {/* Agents Table */}
             <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
                 {loading ? (
                     <div className={styles.loadingRow}>Loading agents...</div>
@@ -203,7 +186,6 @@ export default function AgentsPage() {
                 )}
             </div>
 
-            {/* Add / Edit Agent Modal */}
             {showModal && (
                 <div className="modal-overlay" onClick={() => setShowModal(false)}>
                     <div className="modal" onClick={e => e.stopPropagation()}>
@@ -214,8 +196,7 @@ export default function AgentsPage() {
                         <form onSubmit={handleSubmit} noValidate>
                             <div className="form-group">
                                 <label>Name</label>
-                                <input
-                                    name="name" type="text"
+                                <input name="name" type="text"
                                     className={`form-control ${errors.name ? 'error' : ''}`}
                                     placeholder="Full name"
                                     value={form.name} onChange={handleChange}
@@ -225,8 +206,7 @@ export default function AgentsPage() {
 
                             <div className="form-group">
                                 <label>Email</label>
-                                <input
-                                    name="email" type="email"
+                                <input name="email" type="email"
                                     className={`form-control ${errors.email ? 'error' : ''}`}
                                     placeholder="agent@example.com"
                                     value={form.email} onChange={handleChange}
@@ -234,12 +214,10 @@ export default function AgentsPage() {
                                 {errors.email && <span className={styles.fieldError}>{errors.email}</span>}
                             </div>
 
-                            {/* Mobile: country code dropdown + number input */}
                             <div className="form-group">
                                 <label>Mobile Number</label>
                                 <div className={styles.mobileRow}>
-                                    <select
-                                        name="countryCode"
+                                    <select name="countryCode"
                                         className={`form-control ${styles.codeSelect}`}
                                         value={form.countryCode} onChange={handleChange}
                                     >
@@ -247,8 +225,7 @@ export default function AgentsPage() {
                                             <option key={code} value={code}>{label}</option>
                                         ))}
                                     </select>
-                                    <input
-                                        name="mobileDigits" type="tel"
+                                    <input name="mobileDigits" type="tel"
                                         className={`form-control ${errors.mobileDigits ? 'error' : ''}`}
                                         placeholder="9876543210"
                                         value={form.mobileDigits} onChange={handleChange}
@@ -259,8 +236,7 @@ export default function AgentsPage() {
 
                             <div className="form-group">
                                 <label>{editAgent ? 'New Password (leave blank to keep)' : 'Password'}</label>
-                                <input
-                                    name="password" type="password"
+                                <input name="password" type="password"
                                     className={`form-control ${errors.password ? 'error' : ''}`}
                                     placeholder={editAgent ? 'Leave blank to keep current' : 'Min 6 characters'}
                                     value={form.password} onChange={handleChange}

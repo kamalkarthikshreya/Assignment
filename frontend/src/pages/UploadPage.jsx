@@ -1,10 +1,3 @@
-/**
- * Upload Page
- * - File upload (CSV/XLSX/XLS) with client-side type validation
- * - Sends to backend for parsing and equal distribution across agents
- * - Displays distributed lists per agent in expandable sections
- */
-
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { FiUploadCloud, FiFile, FiX, FiChevronDown, FiChevronUp } from 'react-icons/fi';
@@ -22,21 +15,15 @@ export default function UploadPage() {
     const [expanded, setExpanded] = useState({});
     const fileRef = useRef(null);
 
-    // Fetch previously distributed lists on mount
-    useEffect(() => {
-        fetchLists();
-    }, []);
+    useEffect(() => { fetchLists(); }, []);
 
     const fetchLists = async () => {
         try {
             const res = await api.get('/lists');
             setLists(res.data.lists);
-        } catch {
-            // silently fail - not critical on initial load
-        }
+        } catch { }
     };
 
-    // ---- File selection ----
     const handleFileSelect = (selected) => {
         if (!selected) return;
         const ext = '.' + selected.name.split('.').pop().toLowerCase();
@@ -50,19 +37,15 @@ export default function UploadPage() {
 
     const handleInputChange = (e) => handleFileSelect(e.target.files[0]);
 
-    // Drag & drop handlers
     const handleDrop = (e) => {
         e.preventDefault(); setDragOver(false);
         handleFileSelect(e.dataTransfer.files[0]);
     };
 
-    // ---- Upload ----
     const handleUpload = async () => {
         if (!file) { toast.warning('Please select a file first'); return; }
-
         const formData = new FormData();
         formData.append('file', file);
-
         setUploading(true);
         try {
             const res = await api.post('/upload', formData, {
@@ -72,32 +55,26 @@ export default function UploadPage() {
             toast.success(res.data.message);
             setFile(null);
             if (fileRef.current) fileRef.current.value = '';
-            fetchLists(); // refresh the lists section
+            fetchLists();
         } catch (err) {
-            const msg = err.response?.data?.message || 'Upload failed';
-            toast.error(msg);
+            toast.error(err.response?.data?.message || 'Upload failed');
         } finally {
             setUploading(false);
         }
     };
 
-    // Toggle expanded agent panel
     const toggle = (id) => setExpanded(p => ({ ...p, [id]: !p[id] }));
 
-    // Group lists by agent for display
     const grouped = lists.reduce((acc, item) => {
         const agentId = item.agent?._id;
         if (!agentId) return acc;
-        if (!acc[agentId]) {
-            acc[agentId] = { agent: item.agent, batches: [] };
-        }
+        if (!acc[agentId]) acc[agentId] = { agent: item.agent, batches: [] };
         acc[agentId].batches.push(item);
         return acc;
     }, {});
 
     return (
         <div>
-            {/* Page Header */}
             <div className={styles.header}>
                 <div>
                     <h2 className={styles.title}>
@@ -110,9 +87,7 @@ export default function UploadPage() {
                 </div>
             </div>
 
-            {/* Upload Card */}
             <div className="card" style={{ marginBottom: 32 }}>
-                {/* Drag & Drop Zone */}
                 <div
                     className={`${styles.dropzone} ${dragOver ? styles.dropzoneActive : ''} ${file ? styles.dropzoneHasFile : ''}`}
                     onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
@@ -121,10 +96,8 @@ export default function UploadPage() {
                     onClick={() => fileRef.current?.click()}
                 >
                     <input
-                        ref={fileRef} type="file"
-                        accept=".csv,.xlsx,.xls"
-                        onChange={handleInputChange}
-                        style={{ display: 'none' }}
+                        ref={fileRef} type="file" accept=".csv,.xlsx,.xls"
+                        onChange={handleInputChange} style={{ display: 'none' }}
                     />
                     {file ? (
                         <div className={styles.fileSelected}>
@@ -133,10 +106,10 @@ export default function UploadPage() {
                                 <div className={styles.fileName}>{file.name}</div>
                                 <div className={styles.fileSize}>{(file.size / 1024).toFixed(1)} KB</div>
                             </div>
-                            <button
-                                className={styles.removeFile}
-                                onClick={(e) => { e.stopPropagation(); setFile(null); if (fileRef.current) fileRef.current.value = ''; }}
-                            >
+                            <button className={styles.removeFile} onClick={(e) => {
+                                e.stopPropagation(); setFile(null);
+                                if (fileRef.current) fileRef.current.value = '';
+                            }}>
                                 <FiX size={16} />
                             </button>
                         </div>
@@ -158,17 +131,14 @@ export default function UploadPage() {
                 </div>
 
                 <button
-                    className="btn btn-primary"
-                    style={{ marginTop: 20, minWidth: 160 }}
-                    onClick={handleUpload}
-                    disabled={!file || uploading}
+                    className="btn btn-primary" style={{ marginTop: 20, minWidth: 160 }}
+                    onClick={handleUpload} disabled={!file || uploading}
                 >
                     <FiUploadCloud size={16} />
                     {uploading ? 'Distributing...' : 'Upload & Distribute'}
                 </button>
             </div>
 
-            {/* Latest Upload Result */}
             {result && (
                 <div className="card" style={{ marginBottom: 32, borderColor: 'rgba(108,99,255,0.3)' }}>
                     <div className={styles.resultHeader}>
@@ -184,9 +154,7 @@ export default function UploadPage() {
                         {result.distribution.map(({ agent, itemCount, items }) => (
                             <div key={agent.id} className={styles.agentBlock}>
                                 <div className={styles.agentBlockHeader}>
-                                    <div className={styles.agentAvatar}>
-                                        {agent.name.charAt(0).toUpperCase()}
-                                    </div>
+                                    <div className={styles.agentAvatar}>{agent.name.charAt(0).toUpperCase()}</div>
                                     <div>
                                         <div className={styles.agentName}>{agent.name}</div>
                                         <div className={styles.agentEmail}>{agent.email}</div>
@@ -198,11 +166,7 @@ export default function UploadPage() {
                                 <div className="table-wrapper" style={{ marginTop: 12 }}>
                                     <table>
                                         <thead>
-                                            <tr>
-                                                <th>First Name</th>
-                                                <th>Phone</th>
-                                                <th>Notes</th>
-                                            </tr>
+                                            <tr><th>First Name</th><th>Phone</th><th>Notes</th></tr>
                                         </thead>
                                         <tbody>
                                             {items.map((item, j) => (
@@ -221,7 +185,6 @@ export default function UploadPage() {
                 </div>
             )}
 
-            {/* Previously Distributed Lists (grouped by agent) */}
             {Object.keys(grouped).length > 0 && (
                 <div>
                     <h3 style={{ marginBottom: 16, fontSize: '1.1rem', color: 'var(--text-secondary)' }}>
@@ -259,12 +222,7 @@ export default function UploadPage() {
                                                     <div className="table-wrapper">
                                                         <table>
                                                             <thead>
-                                                                <tr>
-                                                                    <th>#</th>
-                                                                    <th>First Name</th>
-                                                                    <th>Phone</th>
-                                                                    <th>Notes</th>
-                                                                </tr>
+                                                                <tr><th>#</th><th>First Name</th><th>Phone</th><th>Notes</th></tr>
                                                             </thead>
                                                             <tbody>
                                                                 {batch.items.map((item, j) => (

@@ -1,8 +1,3 @@
-/**
- * Dashboard Layout
- * Sidebar navigation + nested routes for Agents and Upload pages
- */
-
 import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -28,14 +23,11 @@ export default function Dashboard() {
 
     return (
         <div className={styles.layout}>
-            {/* Mobile overlay */}
             {sidebarOpen && (
                 <div className={styles.overlay} onClick={() => setSidebarOpen(false)} />
             )}
 
-            {/* ---- Sidebar ---- */}
             <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ''}`}>
-                {/* Brand */}
                 <div className={styles.brand}>
                     <div className={styles.brandIcon}>
                         <svg viewBox="0 0 32 32" fill="none">
@@ -51,7 +43,6 @@ export default function Dashboard() {
                     <span className={styles.brandName}>Admin</span>
                 </div>
 
-                {/* Navigation */}
                 <nav className={styles.nav}>
                     {NAV_ITEMS.map(({ to, label, icon: Icon }) => (
                         <NavLink
@@ -68,7 +59,6 @@ export default function Dashboard() {
                     ))}
                 </nav>
 
-                {/* User + Logout at bottom */}
                 <div className={styles.sidebarFooter}>
                     <div className={styles.userInfo}>
                         <div className={styles.avatar}>
@@ -85,9 +75,7 @@ export default function Dashboard() {
                 </div>
             </aside>
 
-            {/* ---- Main Content ---- */}
             <div className={styles.main}>
-                {/* Top bar */}
                 <header className={styles.topbar}>
                     <button
                         className={styles.menuBtn}
@@ -101,7 +89,6 @@ export default function Dashboard() {
                     </div>
                 </header>
 
-                {/* Page content */}
                 <main className={styles.content}>
                     <Outlet />
                 </main>

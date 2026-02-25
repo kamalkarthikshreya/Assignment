@@ -1,25 +1,11 @@
-/**
- * Agent Routes (Protected - requires JWT)
- * GET    /api/agents        - Get all agents
- * POST   /api/agents        - Create a new agent
- * PUT    /api/agents/:id    - Update an agent
- * DELETE /api/agents/:id    - Delete an agent
- */
-
 const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const Agent = require('../models/Agent');
 const { protect } = require('../middleware/auth');
 
-// Apply auth middleware to all agent routes
 router.use(protect);
 
-/**
- * @route   GET /api/agents
- * @desc    Get all agents
- * @access  Protected
- */
 router.get('/', async (req, res) => {
     try {
         const agents = await Agent.find().select('-password').sort({ createdAt: -1 });
@@ -34,11 +20,6 @@ router.get('/', async (req, res) => {
     }
 });
 
-/**
- * @route   POST /api/agents
- * @desc    Create a new agent
- * @access  Protected
- */
 router.post(
     '/',
     [
@@ -66,7 +47,6 @@ router.post(
         const { name, email, mobile, password } = req.body;
 
         try {
-            // Check if agent with this email already exists
             const existingAgent = await Agent.findOne({ email });
             if (existingAgent) {
                 return res.status(400).json({
@@ -76,8 +56,6 @@ router.post(
             }
 
             const agent = await Agent.create({ name, email, mobile, password });
-
-            // Return agent without password
             const agentData = await Agent.findById(agent._id).select('-password');
             res.status(201).json({
                 success: true,
@@ -91,11 +69,6 @@ router.post(
     }
 );
 
-/**
- * @route   PUT /api/agents/:id
- * @desc    Update an agent by ID
- * @access  Protected
- */
 router.put(
     '/:id',
     [
@@ -128,11 +101,10 @@ router.put(
 
             const { name, email, mobile, password } = req.body;
 
-            // Update fields if provided
             if (name) agent.name = name;
             if (email) agent.email = email;
             if (mobile) agent.mobile = mobile;
-            if (password) agent.password = password; // pre-save hook will re-hash
+            if (password) agent.password = password;
 
             await agent.save();
 
@@ -149,11 +121,6 @@ router.put(
     }
 );
 
-/**
- * @route   DELETE /api/agents/:id
- * @desc    Delete an agent by ID
- * @access  Protected
- */
 router.delete('/:id', async (req, res) => {
     try {
         const agent = await Agent.findById(req.params.id);

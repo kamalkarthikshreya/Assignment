@@ -1,8 +1,3 @@
-/**
- * Auth Context
- * Manages JWT token and user state globally across the app
- */
-
 import { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext(null);
@@ -12,7 +7,6 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // On mount: try to restore session from localStorage
     useEffect(() => {
         const savedToken = localStorage.getItem('token');
         const savedUser = localStorage.getItem('user');
@@ -23,7 +17,6 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
     }, []);
 
-    // Called after successful login
     const login = (data) => {
         setToken(data.token);
         setUser(data.user);
@@ -31,7 +24,6 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('user', JSON.stringify(data.user));
     };
 
-    // Called on logout
     const logout = () => {
         setToken(null);
         setUser(null);
@@ -48,7 +40,6 @@ export const AuthProvider = ({ children }) => {
     );
 };
 
-// Custom hook for consuming auth context
 export const useAuth = () => {
     const context = useContext(AuthContext);
     if (!context) throw new Error('useAuth must be used within an AuthProvider');

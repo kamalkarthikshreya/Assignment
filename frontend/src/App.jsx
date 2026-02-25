@@ -1,7 +1,3 @@
-/**
- * App.jsx - Root component with routing and auth protection
- */
-
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,14 +8,12 @@ import Dashboard from './pages/Dashboard';
 import AgentsPage from './pages/AgentsPage';
 import UploadPage from './pages/UploadPage';
 
-// Route guard: redirect to /login if not authenticated
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
   if (loading) return <div className="full-loader">Loading...</div>;
   return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 
-// Redirect authenticated users away from login
 const PublicRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
   if (loading) return <div className="full-loader">Loading...</div>;

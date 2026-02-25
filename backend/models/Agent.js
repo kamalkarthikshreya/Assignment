@@ -1,8 +1,3 @@
-/**
- * Agent Model
- * Fields: name, email, mobile (with country code), password
- */
-
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
@@ -24,7 +19,6 @@ const AgentSchema = new mongoose.Schema(
         mobile: {
             type: String,
             required: [true, 'Mobile number is required'],
-            // Stores with country code, e.g. "+91 9876543210"
             match: [/^\+?[1-9]\d{1,14}$/, 'Please enter a valid mobile number with country code'],
         },
         password: {
@@ -37,7 +31,6 @@ const AgentSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-// Hash password before saving
 AgentSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
     const salt = await bcrypt.genSalt(10);
