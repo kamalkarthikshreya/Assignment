@@ -1,0 +1,38 @@
+/* Agents Page CSS Module */
+
+.header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    gap: 16px;
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+}
+
+.loadingRow {
+    padding: 40px;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.fieldError {
+    color: var(--danger);
+    font-size: 0.78rem;
+    margin-top: 2px;
+}
+
+.mobileRow {
+    display: flex;
+    gap: 10px;
+}
+
+.codeSelect {
+    width: 160px;
+    flex-shrink: 0;
+}

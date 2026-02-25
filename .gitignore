@@ -1,0 +1,16 @@
+# Root .gitignore
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment files (keep .env.example, exclude .env)
+.env
+
+# Editor
+.vscode/
+.idea/

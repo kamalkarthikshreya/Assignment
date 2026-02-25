@@ -1,0 +1,209 @@
+/* Upload Page CSS Module */
+
+.header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* ---- Drop Zone ---- */
+.dropzone {
+    border: 2px dashed rgba(108, 99, 255, 0.35);
+    border-radius: var(--radius);
+    padding: 48px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.dropzone:hover,
+.dropzoneActive {
+    border-color: var(--primary);
+    background: rgba(108, 99, 255, 0.06);
+}
+
+.dropzoneHasFile {
+    border-style: solid;
+    border-color: var(--primary);
+    background: rgba(108, 99, 255, 0.06);
+}
+
+.dropzoneTitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.dropzoneSubtitle {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.allowedTypes {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.csvFormat {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.csvFormat code {
+    background: rgba(255, 255, 255, 0.06);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--primary-light);
+    font-size: 0.78rem;
+}
+
+.fileSelected {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.fileName {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.fileSize {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.removeFile {
+    background: rgba(255, 71, 87, 0.1);
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--danger);
+    margin-left: auto;
+    transition: background 0.2s;
+}
+
+.removeFile:hover {
+    background: rgba(255, 71, 87, 0.2);
+}
+
+/* ---- Result ---- */
+.resultHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.resultGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.agentBlock {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+}
+
+.agentBlockHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 4px;
+}
+
+.agentAvatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.agentName {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.agentEmail {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+/* ---- Accordion ---- */
+.agentAccordions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.accordion {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.accordionHeader {
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.15s;
+    color: var(--text-primary);
+}
+
+.accordionHeader:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.accordionBody {
+    padding: 0 20px 20px;
+}
+
+.batchSection {
+    margin-bottom: 20px;
+}
+
+.batchSection:last-child {
+    margin-bottom: 0;
+}
+
+.batchLabel {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
